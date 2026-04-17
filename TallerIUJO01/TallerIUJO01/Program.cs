@@ -8,6 +8,7 @@
  */
 using System;
 using System.IO;
+using System.Text;
 
 namespace TallerIUJO01
 {
@@ -54,6 +55,31 @@ namespace TallerIUJO01
 			{
 				sw.WriteLine(string.Format("ID: {0} | Nota: {1} | {2:yyyy-MM-dd HH:mm}", id, nota, DateTime.Now));
 			}
+			
+			//Persistencia de Datos
+			string archivoBin = Path.Combine(rutaRaiz, "auditoria.dat");
+			using (FileStream fs = new FileStream(archivoBin, FileMode.Append, FileAccess.Write))
+			{
+				byte[] bytesID = Encoding.UTF8.GetBytes(id + "|");
+				fs.Write(bytesID, 0, bytesID.Length);
+			}
+			Console.WriteLine("Persistencia de Datos generada con éxito.");
+			
+			//Inspección de Metadatos
+			FileInfo info = new FileInfo(archivoTexto);
+			Console.WriteLine(string.Format("El archivo notas pesa un total de: {0} bytes", info.Length));
+			
+			//Lectura Secuencial
+			Console.WriteLine("\n---> Contenido Actual del Reporte:");
+			using (StreamReader sr = new StreamReader(archivoTexto))
+			{
+				string linea;
+				while ((linea = sr.ReadLine()) != null)
+				{
+					Console.WriteLine(" LINEA: " + linea);
+				}
+			}
+			
 			
 			Console.Write("Press any key to continue . . . ");
 			Console.ReadKey(true);
