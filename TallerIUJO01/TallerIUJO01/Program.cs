@@ -29,13 +29,31 @@ namespace TallerIUJO01
 			Console.WriteLine(registroLimpio);
 			
 			string[] partesRegistro = registroLimpio.Split(';');
-			string id = partesRegistro[0].Trim();
+			string id = partesRegistro[0].Trim().Replace("ID_", " ");
 			string nombre = partesRegistro[1].Trim();
 			string tarea = partesRegistro[2].Trim().ToLower();
 			string nota = partesRegistro[3].Trim();
 			
-			Console.WriteLine("\n");
 			Console.WriteLine(string.Format("el usuario {0} de ID: {1} tiene  la tarea {2} y {3} es su calificación", nombre, id, tarea, nota));
+			
+			//Flujo en Archivos
+			
+			string rutaRaiz = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DatosIUJO");
+			string archivoTexto = Path.Combine(rutaRaiz, "notas.txt");
+			
+			Console.WriteLine(archivoTexto);
+			
+			if(!Directory.Exists(rutaRaiz))
+			{
+				Console.WriteLine("Creando Directorio....");
+				Directory.CreateDirectory(rutaRaiz);
+				Console.WriteLine("Directorio Creado con éxito.");
+			}
+			
+			using (StreamWriter sw = new StreamWriter(archivoTexto, true))
+			{
+				sw.WriteLine(string.Format("ID: {0} | Nota: {1} | {2:yyyy-MM-dd HH:mm}", id, nota, DateTime.Now));
+			}
 			
 			Console.Write("Press any key to continue . . . ");
 			Console.ReadKey(true);
